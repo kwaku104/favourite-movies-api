@@ -31,7 +31,7 @@ public class ItemController {
                                          // and the 200 OK status, or no body and a 404 Not Found status.
     }
 
-    // POST controller methods
+    // POST controller method
     @PostMapping
     public ResponseEntity<Item> create(@RequestBody Item item) {
         Item created = service.create(item);
@@ -40,5 +40,22 @@ public class ItemController {
                 .buildAndExpand(created.getId())
                 .toUri();
         return ResponseEntity.created(location).body(created);
+    }
+
+    //PUT controller method
+    @PutMapping("/{id}")
+    public ResponseEntity<Item> update(@PathVariable("id") Long id, @RequestBody Item updatedItem) {
+        Optional<Item> updated = service.update(id, updatedItem);
+
+        return updated
+                .map(value -> ResponseEntity.ok().body(value))
+                .orElseGet(() -> {
+                    Item created = service.create(updatedItem);
+                    URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                            .path("/{id}")
+                            .buildAndExpand(created.getId())
+                            .toUri();
+                    return ResponseEntity.created(location).body(created);
+                });
     }
 }
