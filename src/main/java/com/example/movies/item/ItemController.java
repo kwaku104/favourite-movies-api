@@ -1,11 +1,10 @@
 package com.example.movies.item;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +17,7 @@ public class ItemController {
         this.service = service;
     }
 
-    // Get controller methods
+    // GET controller methods
     @GetMapping
     public ResponseEntity<List<Item>> findAll(){ // Response entity is a helper class to fully describe the response
         List<Item> items = service.findAll();
@@ -30,5 +29,16 @@ public class ItemController {
         Optional<Item> item = service.find(id);
         return ResponseEntity.of(item);  // Shortcut for creating a ResponseEntity with either a valid body
                                          // and the 200 OK status, or no body and a 404 Not Found status.
+    }
+
+    // POST controller methods
+    @PostMapping
+    public ResponseEntity<Item> create(@RequestBody Item item) {
+        Item created = service.create(item);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(created.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(created);
     }
 }
