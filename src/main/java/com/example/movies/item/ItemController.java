@@ -58,4 +58,11 @@ public class ItemController {
                     return ResponseEntity.created(location).body(created);
                 });
     }
+
+    // DELETE controller method
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Item> delete(@PathVariable("id") Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
