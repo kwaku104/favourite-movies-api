@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class ItemController {
 
     // POST controller method
     @PostMapping
-    public ResponseEntity<Item> create(@RequestBody Item item) {
+    public ResponseEntity<Item> create(@Valid @RequestBody Item item) {
         Item created = service.create(item);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -44,7 +45,7 @@ public class ItemController {
 
     //PUT controller method
     @PutMapping("/{id}")
-    public ResponseEntity<Item> update(@PathVariable("id") Long id, @RequestBody Item updatedItem) {
+    public ResponseEntity<Item> update(@PathVariable("id") Long id, @Valid @RequestBody Item updatedItem) {
         Optional<Item> updated = service.update(id, updatedItem);
 
         return updated
